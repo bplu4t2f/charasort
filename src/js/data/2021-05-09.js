@@ -6,7 +6,7 @@ dataSet[dataSetVersion].options = [
     name: "Filter by Series Entry",
     key: "series",
     tooltip: "Check this to restrict to certain series.",
-    checked: false,
+    checked: true,
     sub: [
       { name: "Books and CDs", key: "book" },
       { name: "The Highly Responsive to Prayers", tooltip: "01 - Reiiden", key: "HRtP" },
@@ -44,7 +44,7 @@ dataSet[dataSetVersion].options = [
     name: "Filter by Stage Enemy Appearances",
     key: "stage",
     tooltip: "Check this to restrict to characters that appear in certain stages as enemies.",
-    checked: false,
+    checked: true,
     sub: [ { name: "Stage 1", key: "st1" }, { name: "Stage 2", key: "st2" }, { name: "Stage 3", key: "st3" }, { name: "Stage 4", key: "st4" }, { name: "Stage 5/Penultimate", tooltip: "Stage 4 in 5-stage games, and Stage 8 in 9-stage games.", key: "st5" }, { name: "Stage 6/Final", key: "st6" }, { name: "Stage EX/Phantasm", key: "ex" }
     ]
   },

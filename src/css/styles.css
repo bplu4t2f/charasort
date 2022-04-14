@@ -1,8 +1,16 @@
 body {
   font-family: Arial, Helvetica, sans-serif;
   font-size: 16px;
+  background-color: #222;
+  color: #bbb;
 }
 
+/* all line border elements */
+.progressbar, .button {
+  border: 1px solid black;
+}
+
+/* for centering the main page elements via flex */
 .container {
   display: flex;
   flex-flow: column nowrap;
@@ -11,65 +19,77 @@ body {
 }
 
 .progress {
-  margin: 1em auto;
-  width: 500px;
-  display: none;
+  visibility: hidden;
+  font-size: 0.75em;
 }
 
 .progressbar {
   position: relative;
-  width: 492px;
-  border: 1px solid black;
   padding: 3px;
   margin: 2px 0px;
 }
 
+/* the correction stage progress bar is invisble at the start and becomes visible once the correction stage begins */
+#progressbar-correction-stage.invisible {
+  display: none;
+}
+
 .progresstext {
   position: absolute;
-  width: 492px;
-  margin: 3px 0px;
-  text-align: center;
-  font-size: 0.7em;
+	/* width: 100%; */
+	/* margin: 3px 0px; */
+	/* text-align: center; */
+	font-size: 0.93em;
+	left: 0;
+	right: 0;
+	top: 0;
+	bottom: 0;
+	/* vertical-align: middle; */
+	display: flex;
+	justify-content: center;
+	align-items: center;
 }
 
 .progressfill {
   height: 20px;
-  background-color: lightgreen;
+  background-color: #536;
   width: 0%;
 }
 
+
+/* this is the main div that contains the images, the progress bar, and the select buttons */
+/* it uses display: grid, the images are in columns 1 and 3, and the buttons are in column 2. */
 .sorter {
-  margin: 0px auto;
+  margin: 0;
   display: grid;
-  grid-template-columns: 120px 1fr 120px;
+  grid-template-columns: 1fr 140px 1fr;
+  grid-template-rows: 90vh auto;
   grid-gap: 5px;
-  width: 420px;
+}
+
+/* vertical grid with only 1 column, which occupies the center cell of .sorter. */
+/* contains all the buttons (auto rows) */
+.center-column {
+  display: grid;
+  grid-gap: 5px; 
+  grid-template-rows: min-content;
+  grid-auto-rows: 1fr;
 }
 
 .button {
-  border: 1px solid black;
   text-align: center;
   padding: 10%;
-  grid-column: 2 / 3;
   cursor: pointer;
+  
+  /* this is how you vertically center text in 2021... */
+  display: flex;
+  justify-content: center;
+  align-content: center;
+  flex-direction: column;
 }
 
-.starting.start.button {
-  grid-row: span 6;
-}
-
-.starting.load.button {
-  grid-row: span 3;
-  display: none;
-}
-
-.sorting.button, .finished.button {
-  grid-row: span 2;
-  display: none;
-}
-
-.loading.button {
-  grid-row: span 6;
+/* this is added and removed via javascript to show/hide buttons */
+.button.invisible {
   display: none;
 }
 
@@ -110,66 +130,106 @@ body {
   }
 }
 
-.sorter > .image {
-  width: 120px;
-  height: 180px;
-  margin: auto;
-  grid-row: 1 / 7;
+.sorter .image {
+  width: auto; /* for proportional resizing, the limiting factor is usually the height, which is determined by the parent grid height */
+  max-height: 90vh; /* should really be 100 % but that's bugged in chrome */
   cursor: pointer;
+  border: 1px solid black;
+  max-width: 100%;
+  box-sizing: border-box; /* causes the 100 % width to incldue the border, needed to fit this in the parent grid */
+  align-self: center;
 }
 
-.sorter > .text {
-  width: 120px;
-  height: 60px;
+.image-caption.invisible {
   display: none;
 }
 
-.sorter > .text > p {
-  margin: 0.5em 5px 0px;
-  width: calc(100%-10px);
-  text-align: center;
+/* zoom in on the curent pic, this is next to the character name */
+.zoom-button, .eliminate-button {
+  max-width: 3em;
+  max-height: 3em;
+}
+
+.eliminate-button {
+  cursor: pointer;
+}
+
+.left .eliminate-button {
+  margin-right: 1em;
+}
+
+.right .eliminate-button {
+  margin-left: 1em;
+}
+
+.image-caption {
   font-size: 0.8em;
   line-height: 1.5em;
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+  padding: 0em 0.5em;
 }
 
 .sorter > .left {
   grid-column: 1 / 2;
   border: 1px solid #000000;
+  justify-self: right;
 }
 
 .sorter > .right {
   grid-column: 3 / 4;
   border: 1px solid #000000;
+  justify-self: left;
 }
 
-.options {
+#character-stats {
   margin: 1em auto;
+  font-size: 0.5625em;
+}
+
+#options {
   display: grid;
   text-align: left;
   grid-template-columns: repeat(3, 1fr);
   grid-gap: 10px;
-  width: 450px;
 }
 
-.options > div {
-  font-size: 0.5625em;
+.options {
+  margin: 1em auto;
+  width: 550px;
+}
+
+.options div {
+  font-size: 0.7em;
+}
+
+#options-static > div {
+  margin-top: 1em;
+  margin-bottom: 1em;
 }
 
 label {
   cursor: pointer;
+  display: flex;
+  align-items: center;
 }
 
 label:hover {
-  color: #990000;
+  color: #DD0000;
 }
 
-.options > .large.option, .options > hr {
+#options > .large-option, #options > hr {
   grid-column: span 3;
   text-align: center;
   width: 100%;
 }
 
-.image.selector {
+.large-option {
+  font-weight: bold;
+}
+
+#result-image-amount-selector {
   margin-top: 0.5em;
   width: 500px;
   display: none;
@@ -177,7 +237,7 @@ label:hover {
   font-size: 0.75em;
 }
 
-.time.taken {
+#time-taken {
   margin-top: 0.5em;
   width: 500px;
   display: none;
@@ -185,7 +245,7 @@ label:hover {
   font-size: 0.75em;
 }
 
-.results {
+#results {
   font-size: 0.75em;
   display: flex;
   align-content: flex-start;
@@ -194,35 +254,40 @@ label:hover {
 }
 
 @media all and (min-width: 600px) {
-  .results {
+  #results {
     flex-flow: column wrap;
-    max-height: calc(5 * (175px + 2px) + 1 * (15px + 2px));
+    max-height: calc(5 * (175px + 2px) + 1 * (30px + 2px));
     /* 2px for borders */
   }
 }
 
 @media all and (max-width: 600px) {
-  .results {
+  #results {
     flex-flow: column nowrap;
   }
 }
 
+/* a single character in the result table. */
+/* has the rank in the left column, and the character preview + text in the right */
 .result {
-  height: 15px;
+  /*height: 15px;*/
   margin-bottom: -1px;
   display: grid;
   width: 211px;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: 1fr auto;
   border: 1px solid #000;
   margin-right: 5px;
 }
 
-.result.image {
+/*.result.image {
   height: 175px;
-}
+}*/
 
-.result.image img {
+.result img {
+  box-sizing: border-box;
   height: 160px;
+  width: 100%;
+  object-fit: contain;
 }
 
 .result.spacer {
@@ -236,21 +301,10 @@ label:hover {
 }
 
 .result > .left {
-  width: 35px;
   padding: 1px 3px 1px 0.5em;
   grid-column: 1 / 2;
-  text-align: right;
-}
-
-.result.image .left {
-  position: relative;
-}
-
-.result.image > .left span {
-  position: absolute;
-  top: 50%;
-  right: 3px;
-  margin-top: -0.375em;
+  text-align: center;
+  align-self: center; /* to vertically center the thing in the grid cell */
 }
 
 .result > .right {
@@ -271,16 +325,21 @@ label:hover {
 }
 
 a {
-  color: #990000;
+  color: #DD0000;
   font-weight: bold;
   text-decoration: none;
   cursor: pointer;
 }
 
-a:hover {
+.result a:link, .result a:visited {
+  color: #bbb;
+  font-weight: normal;
+}
+
+a:hover, .result a:hover, a:visited:hover, .result a:visited:hover {
   color: #FF6600;
 }
 
 a:visited {
-  color: #6600FF;
+  color: #BB2255;
 }

@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html>
 
 <head>
@@ -26,48 +27,71 @@
   <script src="src/js/html2canvas.min.js"></script>
   <script src="src/js/lz-string.min.js"></script>
   <script src="src/js/seedrandom.min.js"></script>
+  <script src="src/js/heap_sort.js"></script>
+  <script src="src/js/merge_sort.js"></script>
+  <script src="src/js/bubble_sort.js"></script>
   <script src="src/js/main.js"></script>
 </head>
 
 <body>
 <div class="container">
 
-    <div class="progress">
-        <span class="progressbattle"></span>
-        <div class="progressbar">
-            <div class="progressfill"><span class="progresstext"></span></div>
+	<div class="sorter">
+		<img id="image-left" src="src/assets/defaultL.jpg" class="sort image left">
+
+		<div class="center-column">
+		
+			<div id="progress" class="progress">
+				<span id="progressbattle"></span>
+				<div class="progressbar">
+					<div id="progressfill-main-stage" class="progressfill"></div>
+					<span id="progresstext-main-stage" class="progresstext"></span>
+				</div>
+        <div id="progressbar-correction-stage" class="invisible">
+          <div>Correction stage</div>
+				  <div class="progressbar">
+				  	<div id="progressfill-correction-stage" class="progressfill"></div>
+				  	<span id="progresstext-correction-stage" class="progresstext"></span>
+				  </div>
         </div>
+			</div>
+		
+			<div id="button-start" class="starting button">Touhou Project Character Sorter<br><br>Click to Start!</div>
+			<div id="button-load" class="starting button invisible">Load <span id="stored-save-type"></span></div>
+	
+			<div id="button-placeholder-loading" class="loading button invisible"><div></div><span>Loading...</span></div>
+	
+			<!--div id="button-tie" class="sorting button invisible">Tie</div-->
+			<div id="button-undo" class="sorting button invisible">Undo</div>
+			<div id="button-save" class="sorting button invisible">Save Progress</div>
+	
+			<div id="button-save-finished" class="finished button invisible">Generate Result URL</div>
+			<div id="button-getimg" class="finished button invisible">Generate Image</div>
+			<div id="button-list" class="finished button invisible">Generate Text List</div>
+		</div>
+
+		<img id="image-right" src="src/assets/defaultR.jpg" class="sort image right">
+    
+    <div class="image-caption invisible left"><img id="eliminate-left" title="eliminate this from the current set" class="eliminate-button" src="src/assets/cross.png"><span id="image-text-left"></span><a id="image-link-left" target="_blank" rel="noopener noreferrer"><img class="zoom-button" src="src/assets/eyes_too_close.png"/></a></div>
+    <div class="image-caption invisible right"><a id="image-link-right" target="_blank" rel="noopener noreferrer"><img class="zoom-button" src="src/assets/eyes_too_close.png"/></a><span id="image-text-right"></span><img id="eliminate-right" class="eliminate-button" title="eliminate this from the current set" src="src/assets/cross.png"></div>
+  </div>
+	
+	<div id="character-stats"></div>
+
+    <div id="options" class="options"></div>
+    <div id="options-static" class="options">
+      <hr />
+      <div><label><input id="pick-random-images" type="checkbox" /> Of the resulting set, pick 40 at random.</label></div>
+      <div><label><input id="use-heap-sort" type="checkbox" checked="checked" /> Use heap sort (instead of merge sort).<br/>Slightly more picks, but typically yields more accurate results and a smoother sorting experience.</label></div>
     </div>
+    <div id="result-image-amount-selector">Display Images on Result: </div>
+    <div id="time-taken"></div>
+    <div id="results"></div>
+    
+    <div class="info"><a id="restart-seed">Restart Surrent Seed</a></div>
 
-    <div class="sorter">
-        <img src="src/assets/defaultL.jpg" class="left sort image">
-
-        <div class="starting start button">Touhou Project Character Sorter<br><br>Click to Start!</div>
-        <div class="starting load button">Load <span></span></div>
-
-        <div class="loading button"><div></div><span>Loading...</span></div>
-
-        <div class="sorting tie button">Tie</div>
-        <div class="sorting undo button">Undo</div>
-        <div class="sorting save button">Save Progress</div>
-
-        <div class="finished save button">Generate Result URL</div>
-        <div class="finished getimg button">Generate Image</div>
-        <div class="finished list button">Generate Text List</div>
-
-        <img src="src/assets/defaultR.jpg" class="right sort image">
-
-        <div class="left sort text"><p></p></div>
-        <div class="right sort text"><p></p></div>
-    </div>
-
-    <div class="options"></div>
-    <div class="image selector">Display Images on Result: </div>
-    <div class="time taken"></div>
-    <div class="results"></div>
-
-    <div class="info">
-        <a href="https://relick.me/song/">Song Sorter</a> | <a href="mailto:fera@imouto.my">Contact</a> | <a href="https://github.com/execfera/charasort/">Source Code</a> | <a href="?IwVmE4CZNAGSBs5YB8QA5zAMzoCwqzCxEmnDGVkkUXVHEON1lW0tPOn1s9suNyTGr3Y0G3QcN4SBQunNaCxC+pPLsuqreNob5MylKOtuk5RoWGlenhM63TInfyNSRS-aKuaDV+7bKjrJ8wbpClhyu1BZ6bnKG8R5m5kHOHly6gariITE2vvyRxpocZtqW8moxpZ7GGbmlmbGilZXe6j75CSGtLnbAhAxAA">Best Taste</a> | <a class="clearsave">Clear Save Data</a>
+    <div id="info">
+        <a href="https://relick.me/song/">Song Sorter</a> | <a href="mailto:fera@imouto.my">Contact</a> | <a href="https://github.com/execfera/charasort/">Source Code</a> | <a href="?IwVmE4CZNAGSBs5YB8QA5zAMzoCwqzCxEmnDGVkkUXVHEON1lW0tPOn1s9suNyTGr3Y0G3QcN4SBQunNaCxC+pPLsuqreNob5MylKOtuk5RoWGlenhM63TInfyNSRS-aKuaDV+7bKjrJ8wbpClhyu1BZ6bnKG8R5m5kHOHly6gariITE2vvyRxpocZtqW8moxpZ7GGbmlmbGilZXe6j75CSGtLnbAhAxAA">Best Taste</a> | <a id="clearsave">Clear Save Data</a>
         
         <br><br>
 
